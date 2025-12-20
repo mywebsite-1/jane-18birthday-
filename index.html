@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jane 18th Birthday Celebration</title>
+    <style>
+        /* CSS remains identical to your original styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .curtain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            pointer-events: none;
+        }
+
+        .curtain {
+            width: 50%;
+            height: 100%;
+            transition: transform 1.5s cubic-bezier(0.7, 0, 0.3, 1);
+            display: flex;
+            align-items: center;
+            pointer-events: auto;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .curtain.left { 
+            border-right: 2px solid rgba(255,255,255,0.3); 
+            background-image: url('./rn.png'); 
+            background-color: #d4819f;
+            justify-content: flex-end;
+        }
+
+        .curtain.right { 
+            border-left: 2px solid rgba(255,255,255,0.3); 
+            background-image: url('./lm.png'); 
+            background-color: #d4819f;
+        }
+
+        .curtain-text {
+            color: white;
+            font-size: 24px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            border: 2px solid white;
+            padding: 20px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.4); 
+            backdrop-filter: blur(5px);
+            z-index: 10001;
+            white-space: nowrap;
+            position: absolute;
+            right: 0;
+            transform: translateX(50%); 
+        }
+
+        .opened .left { transform: translateX(-100%); }
+        .opened .right { transform: translateX(100%); }
+        .opened .curtain-text { opacity: 0; }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .name, .photo-gallery img {
+            animation: floating 4s ease-in-out infinite;
+        }
+
+        .nav-bar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 0 20px;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: #d4819f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Georgia', serif;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background: #b86c85;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn.active {
+            background: #8b6f5c;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 120px auto 50px;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.308), rgba(255, 255, 255, 0.178)), 
+                              url('./design.png');
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.8s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .floral-corner {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .floral-top-left { top: 0; left: 0; background: radial-gradient(circle, #ffb3c1 0%, transparent 70%); }
+        .floral-top-right { top: 0; right: 0; background: radial-gradient(circle, #ffc9d4 0%, transparent 70%); }
+        .floral-bottom-left { bottom: 0; left: 0; background: radial-gradient(circle, #ffd9e2 0%, transparent 70%); }
+        .floral-bottom-right { bottom: 0; right: 0; background: radial-gradient(circle, #ffb3c1 0%, transparent 70%); }
+
+        .main-content { text-align: center; position: relative; z-index: 1; }
+        .invitation-text { font-size: 18px; color: #8b6f5c; letter-spacing: 3px; margin-bottom: 10px; text-transform: uppercase; }
+        
+        .age { 
+            font-size: 80px; 
+            color: #8b6f5c; 
+            font-weight: bold; 
+            line-height: 1; 
+            margin-bottom: 10px; 
+        }
+
+        .birthday-text { font-size: 48px; color: #8b6f5c; font-weight: bold; letter-spacing: 2px; }
+        .celebration-text { font-size: 32px; color: #8b6f5c; letter-spacing: 2px; margin-bottom: 30px; }
+        
+        .name { 
+            font-size: 100px; 
+            color: #d4819f; 
+            font-family: 'Brush Script MT', cursive; 
+            margin: 20px 0; 
+            display: block;
+        }
+
+        .countdown-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .countdown { display: flex; justify-content: center; gap: 10px; align-items: baseline; }
+        .countdown-value { font-size: 36px; color: #d4819f; font-weight: bold; display: block; }
+        .countdown-label { font-size: 12px; color: #8b6f5c; text-transform: uppercase; }
+        .separator { font-size: 36px; color: #d4819f; font-weight: bold; padding-top: 5px; }
+
+        .date-info { margin: 30px 0; color: #8b6f5c; }
+        .date-number { font-size: 80px; font-weight: bold; line-height: 1; }
+        .date-month { font-size: 24px; text-transform: uppercase; }
+        .date-day { font-size: 18px; color: #d4819f; margin-top: 10px; }
+
+        .list-title { font-size: 48px; color: #d4819f; font-weight: bold; margin-bottom: 30px; text-align: center; text-transform: uppercase; }
+        .name-list { list-style: none; padding: 0; max-width: 400px; margin: 0 auto; text-align: left; }
+        .name-list li { font-size: 18px; color: #a67c8e; padding: 10px 0; border-bottom: 1px solid rgba(212, 129, 159, 0.2); }
+
+        .info-section { margin: 30px 0; text-align: center; }
+        .info-title { font-size: 28px; color: #8b6f5c; font-weight: bold; margin-bottom: 15px; text-transform: uppercase; }
+        
+        .timeline-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .timeline-card {
+            background-color: #c67a7a;
+            color: white;
+            width: 170px;
+            padding: 20px 10px;
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        .timeline-time {
+            font-size: 34px;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .timeline-label {
+            font-size: 15px;
+            font-weight: 500;
+            text-transform: none;
+        }
+
+        .dress-code-box { 
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 40px 20px; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .dress-code-title {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 55px;
+            color: #d4819f;
+            margin-bottom: 15px;
+        }
+
+        .attire-text {
+            color: #8b6f5c;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .avoid-text {
+            color: #a67c8e;
+            font-size: 14px;
+            margin: 20px 0;
+        }
+
+        .palette-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .palette-circle {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 3px solid #d4af37;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .palette-circle:hover {
+            transform: scale(1.15) translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        .rsvp-form {
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; color: #8b6f5c; margin-bottom: 8px; font-weight: bold; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d4819f;
+            border-radius: 8px;
+            font-family: 'Georgia', serif;
+        }
+        .submit-btn {
+            background: #d4819f;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+        .submit-btn:hover { background: #b86c85; }
+
+        .about-text-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            line-height: 1.8;
+            color: #8b6f5c;
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .photo-gallery img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 5px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container { margin: 100px 15px 30px; padding: 40px 15px; }
+            .age { font-size: 60px; }
+            .name { font-size: 70px; }
+            .nav-btn { font-size: 11px; padding: 8px 12px; }
+            .countdown { gap: 5px; }
+            .separator { font-size: 24px; }
+            .dress-code-title { font-size: 45px; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="./I See the Light (From _Tangled_) • Instrumental.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="curtain-container" id="curtainWrapper">
+        <div class="curtain left">
+            <div class="curtain-text" onclick="openCurtain()">Open Invitation</div>
+        </div>
+        <div class="curtain right"></div>
+    </div>
+
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <button class="nav-btn active" onclick="showPage('home', this)">Home</button>
+            <button class="nav-btn" style="background:#b86c85" onclick="showPage('rsvp', this)">RSVP</button>
+            <button class="nav-btn" onclick="showPage('info', this)">Event Info</button>
+            <button class="nav-btn" onclick="showPage('about', this)">About Jane</button>
+            <button class="nav-btn" onclick="showPage('roses', this)">18 Roses</button>
+            <button class="nav-btn" onclick="showPage('candles', this)">18 Candles</button>
+            <button class="nav-btn" onclick="showPage('gifts', this)">18 Gifts</button> 
+            <button class="nav-btn" onclick="showPage('bluebills', this)">18 Blue Bills</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="floral-corner floral-top-left"></div>
+        <div class="floral-corner floral-top-right"></div>
+        <div class="floral-corner floral-bottom-left"></div>
+        <div class="floral-corner floral-bottom-right"></div>
+
+        <div id="home" class="page active">
+            <div class="main-content">
+                <div class="invitation-text">You are invited to the</div>
+                <div class="age">18</div>
+                <div class="birthday-text">BIRTHDAY</div>
+                <div class="celebration-text">CELEBRATION OF</div>
+                <span class="name">Jane</span>
+
+                <div class="countdown-box">
+                    <div class="countdown">
+                        <div class="countdown-item"><span class="countdown-value" id="days">0</span><span class="countdown-label">Days</span></div>
+                        <div class="separator">:</div>
+                        <div class="countdown-item"><span class="countdown-value" id="hours">0</span><span class="countdown-label">Hrs</span></div>
+                        <div class="separator">:</div>
+                        <div class="countdown-item"><span class="countdown-value" id="minutes">0</span><span class="countdown-label">Min</span></div>
+                        <div class="separator">:</div>
+                        <div class="countdown-item"><span class="countdown-value" id="seconds">0</span><span class="countdown-label">Sec</span></div>
+                    </div>
+                </div>
+
+                <div class="date-info">
+                    <div class="date-day">Friday</div>
+                    <div class="date-number">26</div>
+                    <div class="date-month">December 2025</div>
+                </div>
+                
+            </div>
+        </div>
+        <div id="info" class="page">
+            <div class="info-section">
+                <h2 class="info-title">Parents</h2>
+                <p>Mr. Jeromme Israel & Mrs. Emma Israel</p>
+            </div>
+
+            <div class="info-section">
+                <h2 class="info-title">Program Timeline</h2>
+                <div class="timeline-grid">
+                    <div class="timeline-card">
+                        <span style="font-size: 28px; margin-bottom: 5px;">📍</span>
+                        <div class="timeline-time">5:00 PM</div>
+                        <div class="timeline-label">ArrivalTime</div>
+                    </div>
+                    <div class="timeline-card">
+                        <span style="font-size: 28px; margin-bottom: 5px;">💃</span>
+                        <div class="timeline-time">6:00 PM</div>
+                        <div class="timeline-label">Debut party</div>
+                    </div>
+                    <div class="timeline-card">
+                        <span style="font-size: 28px; margin-bottom: 5px;">🎊</span>
+                        <div class="timeline-time">10:00 PM</div>
+                        <div class="timeline-label">After Party</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2 class="info-title">Venue</h2>
+                <p>Arthur's Restobar</p>
+                <p>Lajong, Bulan, Sorsogon</p>
+                <a href="https://www.google.com/maps/place/12%C2%B040'19.0%22N+123%C2%B053'36.0%22E/@12.671945,123.89332,746m/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d12.671945!4d123.89332!17m2!4m1!1e3!18m1!1e1?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D">
+                    📍 View on Google Maps
+                </a>
+            </div>
+
+            <div class="info-section">
+                <h2 class="info-title">Attire</h2>
+                <div class="dress-code-box">
+                    <div class="dress-code-title">Dress Code</div>
+                    <p class="attire-text">ATTIRE OF 18 ROSES: POLO LONG/SHORT SLEEVES</p>
+                    <p class="attire-text">ATTIRE OF OTHER GUESTS: SEMI FORMAL OR FORMAL ATTIRE</p>
+                    
+                    <p class="avoid-text">Please avoid jeans, casual attire, and shorts. Wear any color below:</p>
+                    
+                    <div class="palette-container">
+                        <div class="palette-circle" style="background-color: #fefcf3;"></div>
+                        <div class="palette-circle" style="background-color: #f5e6d3;"></div>
+                        <div class="palette-circle" style="background-color: #f9d5a2;"></div>
+                        <div class="palette-circle" style="background-color: #ffa1d0;"></div>
+                        <div class="palette-circle" style="background-color: #ec8ab3;"></div>
+                        <div class="palette-circle" style="background-color: #f0689c;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="rsvp" class="page">
+            <h1 class="list-title">Confirm Attendance</h1>
+            <div class="rsvp-form">
+                <form action="https://formspree.io/f/xojaqaaz" method="POST">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="name" required placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label>Will you attend?</label>
+                        <select name="attendance" required>
+                            <option value="Yes">Yes, I'll be there!</option>
+                            <option value="No">Sorry, I can't make it</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Guests (Including you)</label>
+                        <input type="number" name="guests" min="1" max="5" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Message for Jane (Optional)</label>
+                        <textarea name="message" rows="4" placeholder="Write something sweet..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Send RSVP</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="about" class="page">
+            <h1 class="list-title">About Jane</h1>
+            <div class="about-text-box">
+                <p>"As Jane steps into her 18th year, she celebrates a journey of growth, grace, and dreams."</p>
+                <div class="photo-gallery">
+                    <img src="./1.jpg" alt="Jane Photo 1">
+                    <img src="./2.jpg" alt="Jane Photo 2">
+                    <img src="./3.jpg" alt="Jane Photo 3">
+                </div>
+            </div>
+        </div>
+
+        <div id="roses" class="page">
+            <h1 class="list-title">18 Roses</h1>
+            <ul class="name-list">
+                <li>1. Artemio Listana</li>
+                <li>2. Uno Listana</li>
+                <li>3. Arvin Listna</li>
+                <li>4. Albert Lasin</li>
+                <li>5. Aljon Israel</li>
+                <li>6. Matthew Guelas</li>
+                <li>7. Raffy Gueta</li>
+                <li>8. Nicolas John Cedrick Listana</li>
+                <li>9. Kenn Dela Fuente</li>
+                <li>10. Samuel Templo</li>
+                <li>11. David Salva</li>
+                <li>12. Harley Mendeez</li>
+                <li>13. Rayver Guistuir</li>
+                <li>14. Xymon Tee</li>
+                <li>15. Riel Elposs</li>
+                <li>16. Wency Esmas Bragado</li>
+                <li>17. John Bien Gojar</li>
+                <li>18. Jeromme Israel</li>
+            </ul>
+        </div>
+
+        <div id="candles" class="page">
+            <h1 class="list-title">18 Candles</h1>
+            <ul class="name-list">
+                <li>1. Bernadette Atienza</li>
+                <li>2. Olive Israel</li>
+                <li>3. Judy Listana</li>
+                <li>4. Ruby Goyal</li>
+                <li>5. Kharen Guelas</li>
+                <li>6. Estela Listana</li>
+                <li>7. Irene Listana</li>
+                <li>8. Charity Mae Listana</li>
+                <li>9. Liane Goyal</li>
+                <li>10. Dorina Gliban</li>
+                <li>11. Janine Arellano Gutay</li>
+                <li>12. Shaine Listana</li>
+                <li>13. Jamiah Limasac</li>
+                <li>14. Rhian Laguda</li>
+                <li>15. Lian Dellomas</li>
+                <li>16. Luan Gimao</li>
+                <li>17. Felizardo Aribatado</li>
+                <li>18. Mary Rose Laguidao</li>
+            </ul>
+        </div>
+
+        <div id="gifts" class="page">
+            <h1 class="list-title">18 Gifts</h1>
+            <ul class="name-list">
+                <li>1. Joan Listana</li>
+                <li>2. Nanette Goyal</li>
+                <li>3. Sheena Mae Israel</li>
+                <li>4. Angeline Ferer</li>
+                <li>5. Sheena Dominguez Rodriguez</li>
+                <li>6. Althea Buban</li>
+                <li>7. Jane Arellano</li>
+                <li>8. Emmanuel Polo</li>
+                <li>9. John Mark Gipit</li>
+                <li>10. Eurha Ashley Ballesteros</li>
+                <li>11. Angela Goyal</li>
+                <li>12. Eunice Dichoso</li>
+                <li>13. Francine Rabulan</li>
+                <li>14. Shina Gliban</li>
+                <li>15. Antonnete Groyon</li>
+                <li>16. Lian Valeriano</li>
+                <li>17. Krissha Lucenario</li>
+                <li>18. Noime Gubat</li>
+            </ul>
+        </div>
+
+        <div id="bluebills" class="page">
+            <h1 class="list-title">18 Blue Bills</h1>
+            <ul class="name-list">
+                <li>1. Tita Agatha Hipolito</li>
+                <li>2. Tito Kiko Hipolito</li>
+                <li>3. Tita Pricilla Goyal</li>
+                <li>4. Tita Rina Dela Rosa</li>
+                <li>5. Lola Joecy Listana</li>
+                <li>6. Tito Jonathan Amman</li>
+                <li>7. Tito Ruzzel Gocalin</li>
+                <li>8. Ninong John Jervette Tecson</li>
+                <li>9. Ninang Gayle Tecson</li>
+                <li>10. Ninang Christine Tecson</li>
+                <li>11. Ninong Junter Huiden</li>
+                <li>12. Ninang Mirasol Lim</li>
+                <li>13. Ninang Rachel Lao</li>
+                <li>14. Ninong Nestor Gutiza</li>
+                <li>15. Ninang Bynillove Gonzales</li>
+                <li>16. Ninong Tristan Somalinog</li>
+                <li>17. Ninong Jerry Hipos</li>
+                <li>18. Ninong Karl Yap Lee</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function openCurtain() {
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => console.log("Playback started"));
+            document.getElementById('curtainWrapper').classList.add('opened');
+            setTimeout(() => {
+                document.getElementById('curtainWrapper').style.display = 'none';
+            }, 1500);
+        }
+
+        function showPage(pageId, btnElement) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            btnElement.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateCountdown() {
+            const targetDate = new Date('December 26, 2025 17:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            if (distance < 0) {
+                document.getElementById('days').textContent = "0";
+                document.getElementById('hours').textContent = "0";
+                document.getElementById('minutes').textContent = "0";
+                document.getElementById('seconds').textContent = "0";
+                return;
+            }
+            
+            document.getElementById('days').textContent = Math.floor(distance / (1000 * 60 * 60 * 24));
+            document.getElementById('hours').textContent = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById('minutes').textContent = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById('seconds').textContent = Math.floor((distance % (1000 * 60)) / 1000);
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
